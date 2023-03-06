@@ -11,4 +11,7 @@ verify-connection:
 apply-configuration:
 	$(ANSIBLE_PLAYBOOK) -K playbook.yaml
 
-PHONY=install-ssh-key verify-connection
+open-vlc:
+	vlc http://$(RASPBERRY_HOST):8099
+
+PHONY=install-ssh-key verify-connection open-vlc

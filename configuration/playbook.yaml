@@ -9,3 +9,18 @@
          - vlc
          - v4l-utils
        update_cache: yes
+
+- name: Copy over vlc streaming script
+  hosts: raspi
+  tasks:
+    - name: Create Workspace directory
+      file:
+        path: ~/streaming
+        state: directory
+        mode: '0775'
+
+    - name: Copy over streaming script
+      copy:
+        src: scripts/run-vlc-streaming.sh
+        dest: ~/streaming/run-vlc-streaming.sh
+        mode: +x
