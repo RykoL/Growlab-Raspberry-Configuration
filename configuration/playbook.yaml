@@ -1,8 +1,11 @@
-- name: Setup raspberry
+---
+- name: Install dependencies
   hosts: raspi
+  become: yes ## Make sure we elevate permissions to root
   tasks:
-   - name: Ping my hosts
-     ansible.builtin.ping:
-   - name: Print message
-     ansible.builtin.debug:
-       msg: Hello world
+   - name: Install vlc
+     ansible.builtin.apt:
+       pkg:
+         - vlc
+         - v4l-utils
+       update_cache: yes

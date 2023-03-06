@@ -9,6 +9,6 @@ verify-connection:
 	$(ANSIBLE) all -m ping
 
 apply-configuration:
-	$(ANSIBLE_PLAYBOOK) playbook.yaml
+	$(ANSIBLE_PLAYBOOK) -K playbook.yaml
 
 PHONY=install-ssh-key verify-connection
