@@ -1,11 +1,14 @@
 ANSIBLE=ansible -i inventory/inventory.yaml
+ANSIBLE_PLAYBOOK=ansible-playbook -i inventory/inventory.yaml
 RASPBERRY_HOST=192.168.178.10
-KEEPASS_CLI=/Applications/KeePassXC.app/Contents/MacOS/keepassxc-cli
 
 install-ssh-key:
 	ssh-copy-id -i ~/.ssh/id_rsa.pub growlab@$(RASPBERRY_HOST)
 
-verify-conncetion:
+verify-connection:
 	$(ANSIBLE) all -m ping
 
-PHONY=install-ssh-key
+apply-configuration:
+	$(ANSIBLE_PLAYBOOK) playbook.yaml
+
+PHONY=install-ssh-key verify-connection
