@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", image_upload.UploadImageHandler)
+	handler := image_upload.ImageHandler{}
+	http.HandleFunc("/", handler.UploadImageHandler)
 	port := os.Getenv("PORT")
 
 	if port == "" {

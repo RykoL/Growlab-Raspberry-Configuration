@@ -17,8 +17,8 @@ resource "google_storage_bucket" "default" {
 }
 
 terraform {
- backend "gcs" {
-   bucket  = "800024d185b3f036-bucket-tfstate"
-   prefix  = "terraform/state"
- }
+  backend "gcs" {
+    bucket = "800024d185b3f036-bucket-tfstate"
+    prefix = "terraform/state"
+  }
 }
