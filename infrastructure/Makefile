@@ -1,5 +1,5 @@
-export TF_VAR_raspberry_public_ip="192.168.178.1"
-export TF_VAR_raspberry_public_cidr="24"
+export TF_VAR_raspberry_public_ip=154.14.100.114
+export TF_VAR_raspberry_public_cidr=32
 
 
 init:
