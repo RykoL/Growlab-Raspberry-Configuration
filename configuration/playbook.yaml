@@ -9,6 +9,9 @@
          - vlc
          - v4l-utils
        update_cache: yes
+   - name: Install virtualenv
+     pip:
+        name: virtualenv
 
 - name: Copy over vlc streaming script
   hosts: raspi
@@ -24,3 +27,28 @@
         src: scripts/run-vlc-streaming.sh
         dest: ~/streaming/run-vlc-streaming.sh
         mode: +x
+
+
+- name: Deploy image capturer
+  hosts: raspi
+  tasks:
+    - name: Create Workspace directory
+      file:
+        path: ~/image-capturer
+        state: directory
+        mode: '0775'
+    - name: Copy over source
+      copy:
+        src: ../image-capturer/image-capturer
+        dest: ~/image-capturer/
+
+    - name: Copy over requirements
+      copy:
+        src: ../image-capturer/requirements.txt
+        dest: ~/image-capturer/requirements.txt
+
+    - name: Install requirements
+      pip:
+        requirements: ~/image-capturer/requirements.txt
+        virtualenv: ~/image-converter/.venv
+        virtualenv_python: python3.10
