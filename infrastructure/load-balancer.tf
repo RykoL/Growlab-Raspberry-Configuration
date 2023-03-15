@@ -53,7 +53,10 @@ resource "google_compute_security_policy" "ingress_policy" {
     match {
       versioned_expr = "SRC_IPS_V1"
       config {
-        src_ip_ranges = ["${var.raspberry_public_ip}/${var.raspberry_public_cidr}"]
+        src_ip_ranges = [
+          "${var.raspberry_public_ip}/${var.raspberry_public_cidr}",
+          "217.111.124.227/32"
+        ]
       }
     }
     description = "Allows access from raspberyy public ip"

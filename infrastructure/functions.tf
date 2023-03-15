@@ -21,6 +21,18 @@ resource "google_cloudfunctions_function" "image_upload" {
 
   trigger_http = true
   ingress_settings = "ALLOW_INTERNAL_AND_GCLB"
+
+  service_account_email = google_service_account.image_upload.email
+
+  environment_variables = {
+    BUCKET_NAME = google_storage_bucket.images.name
+  }
+
+  lifecycle {
+    replace_triggered_by = [
+      google_storage_bucket_object.image_upload_api_source.md5hash
+    ]
+  }
 }
 
 resource "google_cloudfunctions_function_iam_member" "invoker" {
