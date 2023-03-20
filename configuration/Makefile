@@ -8,6 +8,7 @@ install-ssh-key:
 verify-connection:
 	$(ANSIBLE) all -m ping
 
+apply-configuration: export BACKEND_HOST=$(shell terraform -chdir="../infrastructure" output -raw load_balancer_ip)
 apply-configuration:
 	$(ANSIBLE_PLAYBOOK) -K playbook.yaml
 

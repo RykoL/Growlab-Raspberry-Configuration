@@ -9,25 +9,6 @@
          - vlc
          - v4l-utils
        update_cache: yes
-   - name: Install virtualenv
-     pip:
-        name: virtualenv
-
-- name: Copy over vlc streaming script
-  hosts: raspi
-  tasks:
-    - name: Create Workspace directory
-      file:
-        path: ~/streaming
-        state: directory
-        mode: '0775'
-
-    - name: Copy over streaming script
-      copy:
-        src: scripts/run-vlc-streaming.sh
-        dest: ~/streaming/run-vlc-streaming.sh
-        mode: +x
-
 
 - name: Deploy image capturer
   hosts: raspi
@@ -39,8 +20,13 @@
         mode: '0775'
     - name: Copy over source
       copy:
-        src: ../image-capturer/image-capturer
+        src: ../image-capturer/image_capturer
         dest: ~/image-capturer/
+
+    - name: Copy over pyproject.toml
+      copy:
+        src: ../image-capturer/pyproject.toml
+        dest: ~/image-capturer/pyproject.toml
 
     - name: Copy over requirements
       copy:
@@ -50,5 +36,20 @@
     - name: Install requirements
       pip:
         requirements: ~/image-capturer/requirements.txt
-        virtualenv: ~/image-converter/.venv
-        virtualenv_python: python3.10
+        extra_args: --user
+
+    - name: Set env for load balancer
+      cron:
+        name: "BACKEND_HOST"
+        value: "{{ lookup('ansible.builtin.env', 'BACKEND_HOST') }}"
+        user: "growlab"
+        env: true
+
+    - name: Create cron job for taking images
+      cron:
+        name: "MakeImage"
+        minute: "*/15"
+        weekday: "*"
+        hour: "*"
+        user: "growlab"
+        job: "python3 ~/image-capturer/image_capturer/main.py"

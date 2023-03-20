@@ -1,4 +1,5 @@
 .venv
 .terraform
 .terraform.lock.hcl
+*.egg-info
 image-upload-api.zip

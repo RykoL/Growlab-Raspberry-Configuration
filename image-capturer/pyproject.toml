@@ -1,0 +1,14 @@
+[project]
+name = "image_capturer"
+version = "0.1.0"
+description = "Tool to take images via a webcam and upload them to gcp"
+authors = [
+    { name = "Rico Lang", email = "rico.lang@thoughtworks.com" }
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+image-capturer = "image_capturer.main:main"
