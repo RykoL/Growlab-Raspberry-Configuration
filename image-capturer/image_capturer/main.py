@@ -6,43 +6,38 @@ import sys
 from datetime import datetime
 
 
+from upload import upload_captured_image, make_backend_url, MissingBackendHostExecption
+from image import is_image_bright_enough, capture_image
+
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-def capture_image(capture_device):
-
-    __, frame = capture_device.read()
-
-    cv2.waitKey(0)
-    encoded_img = cv2.imencode(".png", frame)[1]
-    return encoded_img
-
-
-def upload_captured_frame(url, image):
-    current_timestamp = datetime.now().strftime("%m %d %Y, %H:%M,%S")
-    resp = requests.post(url, files = {f"{current_timestamp}": image})
-    logger.info(f"Got response {resp}")
 
 def main():
-    backend_host = os.getenv("BACKEND_HOST")
-    backend_url = f'http://{backend_host}'
-
-    if backend_host is None:
-        logger.error("Error retrieving BACKEND_HOST")
-        return
-
+    capture_device = None
     try:
+        backend_url = make_backend_url()
+
         capture_device = cv2.VideoCapture(-0)
         image = capture_image(capture_device)
-        upload_captured_frame(backend_url, image)
+
+        if is_image_bright_enough(image):
+            upload_captured_image(backend_url, image)
+        else:
+            logger.warn('Image taken is not bright enough. Skip uploading.')
+
+    except MissingBackendHostExecption:
+        logger.error('Please supply the BACKEND_HOST environment variable.')
     except Exception as e:
         logger.error(e)
         raise
     finally:
-        capture_device.release()
+        if capture_device is not None:
+            capture_device.release()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
